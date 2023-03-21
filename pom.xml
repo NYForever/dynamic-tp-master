@@ -1,0 +1,411 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>cn.dynamictp</groupId>
+    <artifactId>dynamic-tp-all</artifactId>
+    <version>1.0.8</version>
+    <packaging>pom</packaging>
+
+    <name>DynamicTp Project</name>
+    <description>🔥🔥🔥轻量级动态线程池，内置监控告警功能，基于主流配置中心（已支持Nacos、Apollo、Zookeeper、Consul、Etcd，可通过SPI自定义实现）</description>
+    <url>https://github.com/lyh200/dynamic-tp</url>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <dtp.version>1.0.8</dtp.version>
+        <spring-boot.version>2.5.8</spring-boot.version>
+        <spring-cloud.version>2020.0.5</spring-cloud.version>
+        <spring-cloud-alibaba.version>2021.1</spring-cloud-alibaba.version>
+        <hutool.version>5.8.1</hutool.version>
+        <lombok.version>1.18.24</lombok.version>
+        <apollo.version>1.5.0</apollo.version>
+        <logback.version>1.2.10</logback.version>
+        <log4j.version>2.17.1</log4j.version>
+        <guava.version>31.1-jre</guava.version>
+        <jackson-core.version>2.13.2</jackson-core.version>
+        <jackson-databind.version>2.13.2.1</jackson-databind.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <modules>
+        <module>adapter</module>
+        <module>core</module>
+        <module>common</module>
+        <module>starter</module>
+        <module>logging</module>
+        <module>example</module>
+        <module>extension</module>
+    </modules>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>${hutool.version}</version>
+        </dependency>
+    
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+    
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+
+            <dependency>
+                <groupId>cn.dynamictp</groupId>
+                <artifactId>dynamic-tp-adapter</artifactId>
+                <version>${dtp.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.dynamictp</groupId>
+                <artifactId>dynamic-tp-common</artifactId>
+                <version>${dtp.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.dynamictp</groupId>
+                <artifactId>dynamic-tp-core</artifactId>
+                <version>${dtp.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.dynamictp</groupId>
+                <artifactId>dynamic-tp-logging</artifactId>
+                <version>${dtp.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.dynamictp</groupId>
+                <artifactId>dynamic-tp-adapter-webserver</artifactId>
+                <version>${dtp.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.dynamictp</groupId>
+                <artifactId>dynamic-tp-adapter-dubbo</artifactId>
+                <version>${dtp.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.dynamictp</groupId>
+                <artifactId>dynamic-tp-adapter-rocketmq</artifactId>
+                <version>${dtp.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.dynamictp</groupId>
+                <artifactId>dynamic-tp-adapter-hystrix</artifactId>
+                <version>${dtp.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.dynamictp</groupId>
+                <artifactId>dynamic-tp-extension-limiter-redis</artifactId>
+                <version>${dtp.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.dynamictp</groupId>
+                <artifactId>dynamic-tp-extension-notify-email</artifactId>
+                <version>${dtp.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.dynamictp</groupId>
+                <artifactId>dynamic-tp-spring-boot-starter-common</artifactId>
+                <version>${dtp.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.dynamictp</groupId>
+                <artifactId>dynamic-tp-spring-boot-starter-adapter-webserver</artifactId>
+                <version>${dtp.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${spring-cloud-alibaba.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logback.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-core</artifactId>
+                <version>${logback.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-core</artifactId>
+                <version>${log4j.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-api</artifactId>
+                <version>${log4j.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-slf4j-impl</artifactId>
+                <version>${log4j.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>${jackson-core.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson-databind.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <url>https://github.com/yanhom1314/dynamic-tp/tree/master</url>
+        <connection>scm:git:git://github.com/yanhom1314/dynamic-tp.git</connection>
+        <developerConnection>scm:git:ssh://github.com:yanhom1314/dynamic-tp.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
+    <developers>
+        <developer>
+            <id>yanhom</id>
+            <name>yanhom</name>
+            <email>yanhom1314@gmail.com</email>
+            <url>https://github.com/yanhom1314</url>
+        </developer>
+    </developers>
+
+    <issueManagement>
+        <system>Github Issue</system>
+        <url>https://github.com/yanhom1314/dynamic-tp/issues</url>
+    </issueManagement>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <!-- 公共checkstyle标准配置，可以在子模块中覆盖，修改自定义选项 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <version>3.1.0</version>
+                    <configuration>
+                        <configLocation>checkstyle/checkstyle.xml</configLocation>
+                        <includeTestSourceDirectory>false</includeTestSourceDirectory>
+                        <consoleOutput>true</consoleOutput>
+                        <encoding>UTF-8</encoding>
+                        <skip>false</skip>
+                        <!--这里是说当前这个配置是什么错误级别。如果配置的是error，那么扫描到不符合条件的，就是打印error。checkstyle里允许的错误级别有error, warning, info. -->
+                        <violationSeverity>error</violationSeverity>
+                        <!-- 是否打断命令执行，错误的时候会停止。否则，错误会生成报告，但不会阻止命令执行。 -->
+                        <failsOnError>false</failsOnError>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>validate</id>
+                            <phase>validate</phase>
+                            <goals>
+                                <goal>checkstyle</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.0</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <attach>true</attach>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <id>package</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Implementation-Title>${project.artifactId}</Implementation-Title>
+                            <Implementation-Version>${project.version}</Implementation-Version>
+                            <Build-Time>${maven.build.timestamp}</Build-Time>
+                            <Built-By>yanhom</Built-By>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+
+            <!-- Gpg Signature -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.6</version>
+                <executions>
+                    <execution>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.7</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>false</autoReleaseAfterClose>
+                </configuration>
+            </plugin>
+
+            <!--所有子模块都要执行的plugin-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.7.1</version>
+            </plugin>
+        </plugins>
+    </build>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>3.1.0</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>checkstyle</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+        </plugins>
+    </reporting>
+</project>

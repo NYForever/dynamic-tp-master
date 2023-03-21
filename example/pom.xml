@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>cn.dynamictp</groupId>
+        <artifactId>dynamic-tp-all</artifactId>
+        <version>1.0.8</version>
+    </parent>
+    <artifactId>dynamic-tp-example</artifactId>
+    <packaging>pom</packaging>
+
+    <properties>
+        <maven.deploy.skip>true</maven.deploy.skip>
+    </properties>
+
+    <modules>
+        <module>example-nacos</module>
+        <module>example-nacos-cloud</module>
+        <module>example-nacos-notify-email</module>
+        <module>example-apollo</module>
+        <module>example-zookeeper</module>
+        <module>example-zookeeper-cloud</module>
+        <module>example-consul-cloud</module>
+        <module>example-etcd</module>
+    </modules>
+
+</project>
