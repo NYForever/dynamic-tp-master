@@ -34,6 +34,10 @@ public class ThreadPoolConfiguration {
      * 通过{@link ThreadPoolCreator} 快速创建一些简单配置的动态线程池
      * tips: 建议直接在配置中心配置就行，不用@Bean声明
      *
+     * 将线程池对象创建为DtpExecutor时，默认就使用了他的监控功能
+     *
+     * 实现原理为实现了InitializingBean接口，在初始化过程中会初始化告警通道
+     *
      * @return 线程池实例
      */
     @Bean

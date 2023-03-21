@@ -18,6 +18,8 @@ public interface RejectedAware {
     /**
      * Do sth before reject.
      *
+     * 拒绝任务之前，先触发告警
+     *
      * @param executor ThreadPoolExecutor instance
      */
     default void beforeReject(ThreadPoolExecutor executor) {

@@ -1,3 +1,30 @@
+
+# 源码解读
+
+## 1.入口
+- 1.`@EnableDynamicTp`
+  - 1.通过Import注解引入了类`DtpBeanDefinitionRegistrar`
+  - 2.加载配置文件，将配置文件中配置的线程池bean注入到spring容器中
+- 2.在config文件中，通过@Bean注入`DtpExecutor`对象
+  - 1.`DtpExecutor`其实现了`InitializingBean`接口，会在实例化过程中设置监控相关的信息，所以`DtpExecutor`执行器默认开启监控功能
+  - 2.任务触发拒绝策略时，会通过动态代理生成不同的拒绝策略，代码在`DtpExecutor`的构造方法中`RejectHandlerGetter.getProxy`
+    - 1.最终的拒绝实现由`RejectedInvocationHandler.invoke`方法来执行，
+    - 2.`RejectedInvocationHandler`实现了`RejectedAware`接口，**在拒绝发生时，会调用`beforeReject(executor);`方法触发告警**
+  - 3.在任务执行前，会调用`beforeExecute`，**检查入队列是否超时，超时触发告警**
+  - 4.在任务执行过程中，重写了`execute`，**如果配置了`taskWrappers`包装器，可以在任务执行过程中做增强**
+  - 5.在任务执行后，会调用`afterExecute`，**检查任务执行是否超时，超时触发告警**
+
+
+
+
+
+
+
+
+
+
+
+
 <p align="center">
 	<img alt="logo" src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/119d7277b1c747479d5980825a078912~tplv-k3u1fbpfcp-zoom-1.image" width="50%">
 </p>

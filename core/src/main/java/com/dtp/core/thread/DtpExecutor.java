@@ -40,6 +40,7 @@ public class DtpExecutor extends DtpLifecycleSupport {
 
     /**
      * RejectHandler name.
+     * 拒绝策略的name
      */
     private String rejectHandlerName;
 
@@ -50,6 +51,7 @@ public class DtpExecutor extends DtpLifecycleSupport {
 
     /**
      * Notify items, see {@link NotifyItemEnum}.
+     * 告警事件
      */
     private List<NotifyItem> notifyItems;
 
@@ -60,6 +62,7 @@ public class DtpExecutor extends DtpLifecycleSupport {
 
     /**
      * If pre start all core threads.
+     * 是否预热所有核心线程，默认false
      */
     private boolean preStartAllCoreThreads;
 
@@ -93,9 +96,16 @@ public class DtpExecutor extends DtpLifecycleSupport {
         super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, threadFactory);
         this.rejectHandlerName = handler.getClass().getSimpleName();
         RejectedExecutionHandler rejectedExecutionHandler = RejectHandlerGetter.getProxy(handler);
+        //设置具体的拒绝策略，是通过代理生成的对象，真正执行会调用RejectedInvocationHandler.invoke方法
         setRejectedExecutionHandler(rejectedExecutionHandler);
     }
 
+    /**
+     * taskWrappers：包装器
+     * 执行任务过程中，taskWrappers不为空，可以执行一些增强逻辑
+     *
+     * @param command
+     */
     @Override
     public void execute(Runnable command) {
         String taskName = null;
@@ -115,6 +125,12 @@ public class DtpExecutor extends DtpLifecycleSupport {
         super.execute(command);
     }
 
+    /**
+     * 处理before逻辑，检查入队列是否超时，超时触发告警
+     *
+     * @param t
+     * @param r
+     */
     @Override
     protected void beforeExecute(Thread t, Runnable r) {
         if (!(r instanceof DtpRunnable)) {
@@ -124,8 +140,11 @@ public class DtpExecutor extends DtpLifecycleSupport {
         DtpRunnable runnable = (DtpRunnable) r;
         long currTime = System.currentTimeMillis();
         if (runTimeout > 0) {
+            //设置了startTime
             runnable.setStartTime(currTime);
         }
+        //调用任务执行之前，查看提交时间和当前时间，如果大于设置的入队列的时间
+        //则触发告警
         if (queueTimeout > 0) {
             long waitTime = currTime - runnable.getSubmitTime();
             if (waitTime > queueTimeout) {
@@ -142,12 +161,18 @@ public class DtpExecutor extends DtpLifecycleSupport {
         super.beforeExecute(t, r);
     }
 
+    /**
+     * 检查任务执行是否超时，超时触发告警
+     * @param r
+     * @param t
+     */
     @Override
     protected void afterExecute(Runnable r, Throwable t) {
 
         if (runTimeout > 0) {
             DtpRunnable runnable = (DtpRunnable) r;
             long runTime = System.currentTimeMillis() - runnable.getStartTime();
+            //任务执行超时
             if (runTime > runTimeout) {
                 runTimeoutCount.incrementAndGet();
                 Runnable alarmTask = () -> AlarmManager.doAlarm(this, RUN_TIMEOUT);
@@ -164,8 +189,10 @@ public class DtpExecutor extends DtpLifecycleSupport {
 
     @Override
     protected void initialize(DtpProperties dtpProperties) {
+        //初始化告警通道
         AlarmManager.initAlarm(this, dtpProperties.getPlatforms());
 
+        //预热核心线程
         if (preStartAllCoreThreads) {
             prestartAllCoreThreads();
         }

@@ -26,6 +26,7 @@ public class NamedThreadFactory implements ThreadFactory {
 
     /**
      * thread priority.
+     * 优先
      */
     private final Integer priority;
 

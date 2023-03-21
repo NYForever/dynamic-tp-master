@@ -15,6 +15,9 @@ public enum ExecutorType {
 
     /**
      * Executor type.
+     *
+     * eager类型表示处理IO密集型的线程池，类似tomcat的线程池，即当核心线程数使用完之后，后续的任务会直接创建新的线程执行，而不是放到队列中
+     * 原理应该是重写了ThreadPoolExecutor的一些方法，可以重点看一下
      */
     COMMON("common", DtpExecutor.class),
     EAGER("eager", EagerDtpExecutor.class);

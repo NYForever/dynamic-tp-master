@@ -90,6 +90,12 @@ public class NotifyItemManager {
         return notifyItemOpt.get();
     }
 
+    /**
+     * 设置告警平台，
+     *
+     * @param platforms 告警通道配置
+     * @param notifyItems 哪些行为触发告警
+     */
     public static void fillPlatforms(List<NotifyPlatform> platforms, List<NotifyItem> notifyItems) {
         if (CollUtil.isEmpty(platforms) || CollUtil.isEmpty(notifyItems)) {
             log.warn("DynamicTp notify, no notify platforms or items configured.");

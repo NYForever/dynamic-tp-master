@@ -19,6 +19,7 @@ public enum NotifyItemEnum {
     /**
      * ThreadPool livenes notify.
      * livenes = activeCount / maximumPoolSize
+     * 活跃度
      */
     LIVENESS("liveness"),
 

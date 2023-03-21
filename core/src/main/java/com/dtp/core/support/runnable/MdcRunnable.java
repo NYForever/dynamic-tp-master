@@ -8,6 +8,8 @@ import java.util.Map;
 /**
  * MdcRunnable related
  *
+ * 可以在线程间传递信息
+ *
  * @author yanhom
  * @since 1.0.8
  **/

@@ -9,6 +9,8 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 
 import java.util.Map;
 
+import static com.dtp.common.em.QueueTypeEnum.buildLbq;
+
 /**
  * BeanUtil related
  *
@@ -49,13 +51,16 @@ public final class BeanUtil {
                                   Map<String, Object> properties,
                                   Object... constructorArgs) {
         BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(clazz);
+        //设置bean的参数
         for (Object constructorArg : constructorArgs) {
             builder.addConstructorArgValue(constructorArg);
         }
+        //设置bean的属性
         if (CollUtil.isNotEmpty(properties)) {
             properties.forEach(builder::addPropertyValue);
         }
 
+        //registry注入bean，需要bean的名字和BeanDefinition对象
         registry.registerBeanDefinition(beanName, builder.getBeanDefinition());
     }
 }

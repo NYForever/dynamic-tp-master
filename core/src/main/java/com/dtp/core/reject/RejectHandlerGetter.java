@@ -49,6 +49,12 @@ public class RejectHandlerGetter {
         return getProxy(buildRejectedHandler(name));
     }
 
+    /**
+     * 动态代理执行拒绝策略
+     *
+     * @param handler
+     * @return
+     */
     public static RejectedExecutionHandler getProxy(RejectedExecutionHandler handler) {
         return (RejectedExecutionHandler) Proxy
                 .newProxyInstance(handler.getClass().getClassLoader(),

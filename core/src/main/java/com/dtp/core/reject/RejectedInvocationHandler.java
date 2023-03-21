@@ -23,6 +23,7 @@ public class RejectedInvocationHandler implements InvocationHandler, RejectedAwa
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         try {
             ThreadPoolExecutor executor = (ThreadPoolExecutor) args[1];
+            //实现接口RejectedAware，在拒绝策略发生时，触发告警
             beforeReject(executor);
 
             return method.invoke(target, args);

@@ -3,6 +3,7 @@ package com.dtp.core.spring;
 import cn.hutool.core.collection.CollUtil;
 import com.dtp.common.config.DtpProperties;
 import com.dtp.common.config.ThreadPoolProperties;
+import com.dtp.common.em.QueueTypeEnum;
 import com.dtp.common.util.BeanUtil;
 import com.dtp.core.reject.RejectHandlerGetter;
 import com.dtp.core.support.ExecutorType;
@@ -20,6 +21,7 @@ import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
 import org.springframework.core.env.Environment;
 import org.springframework.core.type.AnnotationMetadata;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 
@@ -29,6 +31,10 @@ import static com.dtp.common.em.QueueTypeEnum.buildLbq;
 
 /**
  * DtpBeanDefinitionRegistrar related
+ *
+ * 入口类，由@EnableDynamicTp注解 Import该类
+ * 实现了ImportBeanDefinitionRegistrar接口，会在容器启动过程中调用registerBeanDefinitions方法
+ * 注入自己需要的bean
  *
  * @author yanhom
  * @since 1.0.4
@@ -43,17 +49,34 @@ public class DtpBeanDefinitionRegistrar implements ImportBeanDefinitionRegistrar
         this.environment = environment;
     }
 
+    /**
+     * 该方法会在容器启动过程中被调用
+     *
+     * 这里加载配置文件，将配置中
+     * spring:
+     *   dynamic:
+     *     tp:
+     *      executors:
+     * 配置的线程池对象注入到容器中，后续就可以直接从容器中获取该对象
+     *
+     * @param importingClassMetadata
+     * @param registry
+     */
     @Override
     public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
 
+        //new一个配置文件，和当前环境绑定
         DtpProperties dtpProperties = new DtpProperties();
         PropertiesBinder.bindDtpProperties(environment, dtpProperties);
-        val executors = dtpProperties.getExecutors();
+
+        //获取配置中的executors列表
+        List<ThreadPoolProperties> executors = dtpProperties.getExecutors();
         if (CollUtil.isEmpty(executors)) {
             log.warn("DynamicTp registrar, no executors are configured.");
             return;
         }
 
+        //循环注入到spring中
         executors.forEach(x -> {
             Class<?> executorTypeClass = ExecutorType.getClass(x.getExecutorType());
             Map<String, Object> properties = buildPropertyValues(x);
@@ -88,7 +111,7 @@ public class DtpBeanDefinitionRegistrar implements ImportBeanDefinitionRegistrar
         if (clazz.equals(EagerDtpExecutor.class)) {
             taskQueue = new TaskQueue(tpp.getQueueCapacity(), tpp.getMaxFreeMemory() * M_1);
         } else {
-            taskQueue = buildLbq(tpp.getQueueType(), tpp.getQueueCapacity(), tpp.isFair(), tpp.getMaxFreeMemory());
+            taskQueue = QueueTypeEnum.buildLbq(tpp.getQueueType(), tpp.getQueueCapacity(), tpp.isFair(), tpp.getMaxFreeMemory());
         }
 
         return new Object[] {

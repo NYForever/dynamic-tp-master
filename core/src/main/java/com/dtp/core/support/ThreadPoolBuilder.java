@@ -94,6 +94,8 @@ public class ThreadPoolBuilder {
     private boolean dynamic = true;
 
     /**
+     * 等待任务提交之后再关闭
+     *
      * Whether to wait for scheduled tasks to complete on shutdown,
      * not interrupting running tasks and executing all tasks in the queue.
      */
@@ -109,6 +111,7 @@ public class ThreadPoolBuilder {
     /**
      * If io intensive thread pool.
      * default false, true indicate cpu intensive thread pool.
+     * 加强的
      */
     private boolean ioIntensive = false;
 

@@ -64,6 +64,8 @@ public abstract class DtpLifecycleSupport extends ThreadPoolExecutor implements 
 
     @Override
     public void afterPropertiesSet() {
+        //从容器中获取配置类，afterPropertiesSet发生在属性赋值之后，实例化阶段
+        //配置类的加载是优先的，配置类加载完成之后才会加载普通类，所以这里能直接获取到DtpProperties配置类
         DtpProperties dtpProperties = ApplicationContextHolder.getBean(DtpProperties.class);
         initialize(dtpProperties);
     }
