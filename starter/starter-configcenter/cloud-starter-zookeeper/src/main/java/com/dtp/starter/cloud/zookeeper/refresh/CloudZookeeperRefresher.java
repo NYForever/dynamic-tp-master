@@ -13,6 +13,12 @@ import org.springframework.lang.NonNull;
 @Slf4j
 public class CloudZookeeperRefresher extends AbstractRefresher implements SmartApplicationListener {
 
+    /**
+     * 监听RefreshScopeRefreshedEvent事件
+     *
+     * @param eventType
+     * @return
+     */
     @Override
     public boolean supportsEventType(@NonNull Class<? extends ApplicationEvent> eventType) {
         return RefreshScopeRefreshedEvent.class.isAssignableFrom(eventType);

@@ -25,6 +25,10 @@ public class ApolloRefresher extends AbstractRefresher implements ConfigFileChan
 
     private ConfigFileTypeEnum configFileType;
 
+    /**
+     * 启动过程中绑定namespace
+     * 确定配置文件的类型
+     */
     @Override
     public void afterPropertiesSet() {
 
@@ -47,6 +51,11 @@ public class ApolloRefresher extends AbstractRefresher implements ConfigFileChan
         }
     }
 
+    /**
+     * 监听ConfigFileChangeListener 的ConfigFileChangeEvent事件
+     *
+     * @param changeEvent
+     */
     @Override
     public void onChange(ConfigFileChangeEvent changeEvent) {
         String content = changeEvent.getNewValue();
