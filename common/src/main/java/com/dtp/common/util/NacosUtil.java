@@ -46,6 +46,13 @@ public final class NacosUtil {
         return group;
     }
 
+    /**
+     * 判断当前配置文件的类型
+     *
+     * @param dtpProperties
+     * @param defaultType
+     * @return
+     */
     public static ConfigFileTypeEnum getConfigType(DtpProperties dtpProperties,
                                                    ConfigFileTypeEnum defaultType) {
         ConfigFileTypeEnum configFileType = defaultType;

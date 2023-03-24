@@ -36,6 +36,10 @@ public class NacosRefresher extends AbstractRefresher implements InitializingBea
     @Resource
     private Environment environment;
 
+    /**
+     * 初始化该类时，通过配置获取要连接的nacos地址
+     * 并使用configService监听，即所监听的nacos配置如果有变化，就会触发监听
+     */
     @Override
     public void afterPropertiesSet() {
 
@@ -52,13 +56,24 @@ public class NacosRefresher extends AbstractRefresher implements InitializingBea
         }
     }
 
+    /**
+     * 专门定义单独的线程池用于监听
+     *
+     * @return
+     */
     @Override
     public Executor getExecutor() {
         return EXECUTOR;
     }
 
+    /**
+     * 配置变化，接受最新的配置
+     *
+     * @param content
+     */
     @Override
     public void receiveConfigInfo(String content) {
+        //调用父类的刷新方法
         refresh(content, configFileType);
     }
 

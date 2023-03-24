@@ -28,17 +28,32 @@ import org.springframework.context.annotation.DependsOn;
 @ConditionalOnProperty(name = DynamicTpConst.DTP_ENABLED_PROP, matchIfMissing = true, havingValue = "true")
 public class BaseBeanAutoConfiguration {
 
+    /**
+     * 注入了ApplicationContextAware 可以获取到ApplicationContext对象
+     * 可以通过其获取spring中的bean，发布事件
+     * @return
+     */
     @Bean
     public ApplicationContextHolder dtpApplicationContextHolder() {
         return new ApplicationContextHolder();
     }
 
+    /**
+     * 打印banner
+     * @param properties
+     * @return
+     */
     @Bean
     @ConditionalOnMissingBean
     public DtpBannerPrinter dtpBannerPrinter(DtpProperties properties) {
         return new DtpBannerPrinter(properties);
     }
 
+    /**
+     * 后置处理器
+     *
+     * @return
+     */
     @Bean
     @DependsOn({"dtpApplicationContextHolder"})
     @ConditionalOnMissingBean

@@ -1,7 +1,11 @@
 
 # 源码解读
 
-## 1.入口
+## 1.入口注解 && DtpExecutor对象
+
+**以下过程主要是解释了通过@EnableDynamicTp注解，将配置中的线程池对象加载到spring中；
+以及通过@Bean注入DtpExecutor对象，默认开启监控功能**
+
 - 1.`@EnableDynamicTp`
   - 1.通过Import注解引入了类`DtpBeanDefinitionRegistrar`
   - 2.加载配置文件，将配置文件中配置的线程池bean注入到spring容器中
@@ -15,7 +19,26 @@
   - 5.在任务执行后，会调用`afterExecute`，**检查任务执行是否超时，超时触发告警**
 
 
+## 2.配置变更，刷新spring中的DtpExecutor对象
+> 不同的配置中心，配置变更逻辑不一样，因此根据不同的配置中心，实现了多个starter，我们从starter看起
+> 
 
+- 1.这里以`dynamic-tp-spring-boot-starter-nacos`为例进行分析，其他starter也类似，只是触发配置变更的方式不一样
+  - 1.通过配置`spring.factories`指定了配置类，spring启动即会加载该配置类`DtpAutoConfiguration`
+  - 2.该配置类引入了base配置类`BaseBeanAutoConfiguration`
+    - 1.在其中引入了**后置处理器`DtpPostProcessor`**
+    - 2.其会在每个bean初始化之后，校验是否需要注册到`DtpRegistry`对象的map中，用于统一管理（在此处做校验，好过spring都启动完成后，再依次拿出bean做校验要好）
+    - 3.其注入了`DtpRegistry`对象（属于core包下的核心类），`DtpRegistry`又实现了`ApplicationRunner`接口，会在spring容器启动完成之后，执行其`run`方法，打印当前注入到容器的线程池name
+  - 3.配置刷新，更新线程池对象，`NacosRefresher`来实现
+    - 1.其实现了`InitializingBean`对象，在初始化该bean之后会执行`afterPropertiesSet`方法
+    - 2.通过配置文件获取要连接的nacos地址
+    - 3.并使用`configService`监听，即所监听的nacos配置如果有变化，就会触发监听
+    - 4.配置变化会触发`receiveConfigInfo`方法（此逻辑属于nacos配置中心），将最新的配置信息推送过来
+    - 5.最终会调用父类`AbstractRefresher`的`refresh`方法
+    - 6.根据配置文件的类型，获取对应的`ConfigHandler`对象，解析配置文件为map
+    - 7.将map数据绑定到`DtpProperties`对象中
+    - 8.调用`DtpRegistry`的刷新方法，真正刷新线程池的配置，同时发出配置变更事件`RefreshEvent`，**_这里也是整个配置变更的核心_**
+    - 9.后续逻辑是各中间件监听该事件，比如tomcat、dubbo等，获取到最新配置，看是否是要变更这些中间件的线程池配置
 
 
 

@@ -71,6 +71,7 @@ public class DtpAdapterListener implements GenericApplicationListener {
      * @param dtpProperties dtpProperties
      */
     protected void doRefresh(DtpProperties dtpProperties) {
+        //获取DtpAdapter的实现类，调用刷新方法，（实现类多为tomcat、dubbo、jetty等）
         val handlerMap = ApplicationContextHolder.getBeansOfType(DtpAdapter.class);
         if (CollectionUtils.isEmpty(handlerMap)) {
             return;

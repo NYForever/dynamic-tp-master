@@ -29,6 +29,11 @@ public abstract class AbstractRefresher implements Refresher {
     @Resource
     protected DtpProperties dtpProperties;
 
+    /**
+     *
+     * @param content content
+     * @param fileType file type
+     */
     @Override
     public void refresh(String content, ConfigFileTypeEnum fileType) {
 
@@ -38,8 +43,9 @@ public abstract class AbstractRefresher implements Refresher {
         }
 
         try {
-            val configHandler = ConfigHandler.getInstance();
-            val properties = configHandler.parseConfig(content, fileType);
+            //获取confighandler对象，解析配置文件
+            ConfigHandler configHandler = ConfigHandler.getInstance();
+            Map<Object, Object> properties = configHandler.parseConfig(content, fileType);
             doRefresh(properties);
         } catch (IOException e) {
             log.error("DynamicTp refresh error, content: {}, fileType: {}", content, fileType, e);
@@ -56,7 +62,9 @@ public abstract class AbstractRefresher implements Refresher {
     }
 
     protected void doRefresh(DtpProperties dtpProperties) {
+        //根据最新的配置刷新线程池对象
         DtpRegistry.refresh(dtpProperties);
+        //发布事件
         publishEvent(dtpProperties);
     }
 

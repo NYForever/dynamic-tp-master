@@ -151,7 +151,8 @@ public class DtpRegistry implements ApplicationRunner, Ordered {
                 log.warn("DynamicTp refresh, threadPoolName must not be empty.");
                 return;
             }
-            val dtpExecutor = DTP_REGISTRY.get(x.getThreadPoolName());
+            //从DTP_REGISTRY中获取需要变更配置的线程池对象
+            DtpExecutor dtpExecutor = DTP_REGISTRY.get(x.getThreadPoolName());
             if (Objects.isNull(dtpExecutor)) {
                 log.warn("DynamicTp refresh, cannot find specified dtpExecutor, name: {}.", x.getThreadPoolName());
                 return;
@@ -160,6 +161,12 @@ public class DtpRegistry implements ApplicationRunner, Ordered {
         });
     }
 
+    /**
+     * 真正刷新容器中的线程池配置
+     *
+     * @param executor
+     * @param properties
+     */
     private static void refresh(DtpExecutor executor, ThreadPoolProperties properties) {
 
         if (properties.getCorePoolSize() < 0 ||
@@ -279,6 +286,16 @@ public class DtpRegistry implements ApplicationRunner, Ordered {
         DtpRegistry.dtpProperties = dtpProperties;
     }
 
+    /**
+     * 实现ApplicationRunner接口，会在spring容器启动完成后，执行run方法
+     *
+     * 这里是打印了启动完成后的注入到spring中的线程池对象，包括
+     * 1.通过配置文件注册的
+     * 2.注册到DTP_REGISTRY中的
+     * 3.注册到COMMON_REGISTRY中的
+     *
+     * @param args
+     */
     @Override
     public void run(ApplicationArguments args) {
         Set<String> remoteExecutors = Collections.emptySet();
@@ -288,12 +305,14 @@ public class DtpRegistry implements ApplicationRunner, Ordered {
                     .collect(Collectors.toSet());
         }
 
-        val registeredDtpExecutors = Sets.newHashSet(DTP_REGISTRY.keySet());
-        val localDtpExecutors = CollUtil.subtract(registeredDtpExecutors, remoteExecutors);
-        val localCommonExecutors = COMMON_REGISTRY.keySet();
+        HashSet<String> registeredDtpExecutors = Sets.newHashSet(DTP_REGISTRY.keySet());
+        //CollUtil.subtract计算差值，即只在第一个集合中出现的元素
+        Collection<String> localDtpExecutors = CollUtil.subtract(registeredDtpExecutors, remoteExecutors);
+        Set<String> localCommonExecutors = COMMON_REGISTRY.keySet();
         log.info("DtpRegistry initialization end, remote dtpExecutors: {}, local dtpExecutors: {}," +
                         " local commonExecutors: {}", remoteExecutors, localDtpExecutors, localCommonExecutors);
 
+        //没有配置告警平台的话，打印warn日志
         if (CollUtil.isEmpty(dtpProperties.getPlatforms())) {
             log.warn("DtpRegistry initialization end, no notify platforms configured.");
         }

@@ -114,6 +114,7 @@ public class DtpProperties {
 
     /**
      * Notify platform configs.
+     * 通知报警平台配置
      */
     private List<NotifyPlatform> platforms;
 

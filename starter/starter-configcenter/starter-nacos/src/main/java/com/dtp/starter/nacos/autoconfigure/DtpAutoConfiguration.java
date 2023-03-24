@@ -24,6 +24,11 @@ import org.springframework.context.annotation.Configuration;
 @ImportAutoConfiguration({BaseBeanAutoConfiguration.class})
 public class DtpAutoConfiguration {
 
+    /**
+     * 每个starter都有自己的refresher对象，配置变化，会触发该方法
+     *
+     * @return
+     */
     @Bean
     @ConditionalOnMissingBean()
     public NacosRefresher nacosRefresher() {

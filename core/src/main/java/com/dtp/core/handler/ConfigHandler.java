@@ -23,6 +23,9 @@ public class ConfigHandler {
 
     private static final List<ConfigParser> PARSERS = Lists.newArrayList();
 
+    /**
+     * 放入支持的configParser对象，根据type创建不同的ConfigParser
+     */
     private ConfigHandler() {
         ServiceLoader<ConfigParser> loader = ServiceLoader.load(ConfigParser.class);
         for (ConfigParser configParser : loader) {
